@@ -18,7 +18,6 @@ const register = async (req, res) => {
       console.error(error.message);
       return res.status(500).json({ error: error.message });
     } else {
-      console.log(error.code);
       if (error.code == 11000) {
         return res.status(500).json({
           error: " Duplicate Record is not fount | email is not vaild  ",
@@ -97,8 +96,14 @@ const updatedUaser = async (req, res) => {
       });
     }
   } catch (error) {
-    console.error("Error creating Location:", error);
-    return res.status(500).json({ error: "Internal Server Error" });
+    if (error.code == 11000) {
+      return res.status(500).json({
+        error: "  email and password is not vaild  ",
+      });
+    } else {
+      console.error("Error creating Location:", error);
+      return res.json({ error: "Internal Server Error" });
+    }
   }
 };
 module.exports = { register, view, deleteData, updatedUaser };

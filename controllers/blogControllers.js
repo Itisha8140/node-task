@@ -29,7 +29,8 @@ const blogView = async (req, res) => {
       query.$or = [
         { title: { $regex: "^" + search, $options: "i" } },
         { author: { $regex: "^" + search, $options: "i" } },
-        { webstoreURL: { $regex: "^" + search, $options: "i" } },
+        { content: { $regex: "^" + search, $options: "i" } },
+        { webstoreURL: { $regex: "^" + search, $options: "i" } }
       ];
     }
     //sort
@@ -37,14 +38,13 @@ const blogView = async (req, res) => {
     if (sort_query) {
       sort_query[sortFieldKey] = sortKey == "desc" ? -1 : 1;
     }
-    console.log(sort_query);
     //pagination
     let pageNumber = 1;
     if (page) {
       pageNumber = Number(page);
     }
     let skip = parseInt(pageNumber * pagePerRecords) - pagePerRecords;
-    let totleRecod = await blogModels.find(query);
+    let totleRecod = await blogModels.find(query).countDocuments();
     let blog = await blogModels
       .find(query)
       .limit(pagePerRecords)
